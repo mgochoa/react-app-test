@@ -3,6 +3,7 @@ import '../css/Productos.css'
 // ES5 Imports https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import
 //Dependencias
 import { useState } from 'react'
+import EditarProducto from '../modals/EditarProducto'
 //Componentes
 
 const initialProductList = [
@@ -45,6 +46,9 @@ const Productos = (props) => {
     const [precio, setPrecio] = useState(0)
     const [successMessage, setSuccessMessage] = useState(false)
 
+    const [modalIsOpen, setModalIsOpen] = useState(false)
+    const [selectProduct, setSelectedProduct] = useState({})
+
 
     // Arrow function https://www.w3schools.com/Js/js_arrow_function.asp
     const handleNombreChange = event => {
@@ -83,6 +87,27 @@ const Productos = (props) => {
 
     }
 
+    const MostrarEditarProductoModal = producto => {
+        setSelectedProduct(producto)
+        setModalIsOpen(true)
+    }
+
+    const handleCloseModal = () => {
+        setSelectedProduct({})
+        setModalIsOpen(false)
+    }
+
+    const editarProducto = productoEditado => {
+        const indexProductAEditar = productosList.findIndex(producto => producto.id === productoEditado.id)
+        let newProductsList = productosList
+        if (indexProductAEditar !== -1) {
+            newProductsList[indexProductAEditar] = productoEditado
+            setProductsList(newProductsList)
+            setSelectedProduct({})
+            setModalIsOpen(false)
+        }
+    }
+
     return (
 
         <>
@@ -110,7 +135,7 @@ const Productos = (props) => {
                             <td>{product.descripcion}</td>
                             <td>{product.precio}</td>
                             <td>
-                                <button className="products_edit_btn">editar</button>
+                                <button className="products_edit_btn" onClick={() => MostrarEditarProductoModal(product)}>editar</button>
                                 <button className="products_delete_btn" onClick={() => eliminarProducto(product.id)}>eliminar</button>
                             </td>
                         </tr>
@@ -118,6 +143,12 @@ const Productos = (props) => {
                 </tbody>
 
             </table>
+            <EditarProducto
+                isOpen={modalIsOpen}
+                producto={selectProduct}
+                handleSave={editarProducto}
+                handleClose={handleCloseModal}
+            />
         </>
     )
 

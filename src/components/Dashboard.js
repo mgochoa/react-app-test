@@ -35,10 +35,6 @@ const Dashboard = (props) => {
                         <Route path={`${match.path}/ventas/historial`} component={VentasHistorial} />
                         {/* Ventas registro */}
                         <Route exact path={`${match.path}`} component={Productos} />
-                        <Route path={`${match.path}/*`}>
-                            <Redirect exact from="*" path="/dashboard" />
-                        </Route>
-
                     </Switch>
 
                 </main>
